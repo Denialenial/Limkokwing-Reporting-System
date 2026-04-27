@@ -1,6 +1,6 @@
-const BASE_URL = "http://10.205.140.42:5000/api/data";
-const LECTURE_URL = "http://10.205.140.42:5000/api/lectures";
-const REPORT_URL = "http://10.205.140.42:5000/api/reports";
+const BASE_URL = "https://limkokwing-reporting-system.onrender.com/api/data";
+const LECTURE_URL = "https://limkokwing-reporting-system.onrender.com/api/lectures";
+const REPORT_URL = "https://limkokwing-reporting-system.onrender.com/api/reports";
 
 const safeJson = async (res) => {
   try {

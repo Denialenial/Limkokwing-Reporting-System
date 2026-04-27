@@ -1,4 +1,4 @@
-const BASE_URL = "http://10.205.140.42:5000/api/auth";
+const BASE_URL = "https://limkokwing-reporting-system.onrender.com/api/auth";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase";

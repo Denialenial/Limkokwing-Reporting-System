@@ -1,4 +1,5 @@
-const BASE_URL = "http://10.205.140.42:5000/api/attendance";
+const BASE_URL = "https://limkokwing-reporting-system.onrender.com/api/attendance";
+
 
 const handle = async (res) => {
   const data = await res.json();

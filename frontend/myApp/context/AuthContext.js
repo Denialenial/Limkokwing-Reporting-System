@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
         }
 
         const response = await fetch(
-          "http://10.205.140.42:5000/api/auth/login",
+          "https://limkokwing-reporting-system.onrender.com/api/auth/login",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
