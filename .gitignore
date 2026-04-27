@@ -1,0 +1,21 @@
+# Backend
+backend/node_modules/
+backend/.env
+backend/package-lock.json
+backend/config/serviceAccountKey.json
+
+# Frontend
+frontend/myApp/node_modules/
+frontend/myApp/.expo/
+frontend/myApp/android/
+frontend/myApp/ios/
+frontend/myApp/package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
