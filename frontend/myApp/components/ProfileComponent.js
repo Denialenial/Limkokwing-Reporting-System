@@ -89,7 +89,6 @@ function ProfileComponent({ user }) {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.scrollContent}
     >
-      {/* Header Section */}
       <View style={[styles.header, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <View style={[styles.avatarContainer, { backgroundColor: colors.background }]}>
           <Ionicons name={getRoleIcon()} size={50} color={colors.text + "80"} />
@@ -111,7 +110,6 @@ function ProfileComponent({ user }) {
         </Text>
       </View>
 
-      {/* Personal Info Section */}
       <View style={[styles.section, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <View style={styles.sectionHeader}>
           <Ionicons name="person-circle-outline" size={20} color={colors.text + "60"} />
@@ -123,7 +121,6 @@ function ProfileComponent({ user }) {
         <InfoRow icon="business-outline" label="Faculty" value={user.faculty} />
       </View>
 
-      {/* Academic Info Section (Student Only) */}
       {user.role === "student" && (
         <View style={[styles.section, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <View style={styles.sectionHeader}>
@@ -161,7 +158,6 @@ function ProfileComponent({ user }) {
         </View>
       )}
 
-      {/* Lecturer Info Section */}
       {user.role === "lecturer" && (
         <View style={[styles.section, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <View style={styles.sectionHeader}>
@@ -174,7 +170,6 @@ function ProfileComponent({ user }) {
         </View>
       )}
 
-      {/* Program Leader / Principal Lecturer Info Section */}
       {(user.role === "pl" || user.role === "prl") && (
         <View style={[styles.section, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <View style={styles.sectionHeader}>
