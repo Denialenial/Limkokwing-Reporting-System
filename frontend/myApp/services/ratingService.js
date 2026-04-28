@@ -1,4 +1,4 @@
-const BASE_URL = "http://10.205.140.42:5000/api/ratings";
+const BASE_URL = "https://limkokwing-reporting-system.onrender.com/api/ratings";
 
 export const createRating = async (data) => {
   const res = await fetch(BASE_URL, {
