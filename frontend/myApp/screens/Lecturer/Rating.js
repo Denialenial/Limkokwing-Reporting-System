@@ -1,13 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  ActivityIndicator,
-  TouchableOpacity
-} from "react-native";
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthContext";
@@ -137,7 +130,7 @@ function Ratings() {
         </Text>
       </View>
 
-      <View style={styles.summaryBox}>
+      <View style={[styles.summaryBox, { backgroundColor: colors.primary }]}>
         <View style={styles.summaryLeft}>
           <Text style={styles.summaryLabel}>Your Average Rating</Text>
           <Text style={styles.summaryValue}>{average}</Text>
@@ -249,7 +242,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     padding: 20,
     borderRadius: 16,
-    backgroundColor: "#2563eb",
   },
   summaryLeft: {
     flex: 1,
@@ -261,13 +253,15 @@ const styles = StyleSheet.create({
   },
   summaryDivider: {
     width: 1,
-    backgroundColor: "#ffffff30",
+    backgroundColor: "rgba(255,255,255,0.3)",
     marginHorizontal: 16,
   },
   summaryLabel: {
-    color: "#ffffff80",
+    color: "#fff",
     fontSize: 12,
     marginBottom: 4,
+    fontWeight: "500",
+    opacity: 0.9,
   },
   summaryValue: {
     color: "#fff",
@@ -284,9 +278,10 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   summarySubtext: {
-    color: "#ffffff80",
+    color: "#fff",
     fontSize: 11,
     marginTop: 2,
+    opacity: 0.8,
   },
   distributionBox: {
     marginHorizontal: 16,
