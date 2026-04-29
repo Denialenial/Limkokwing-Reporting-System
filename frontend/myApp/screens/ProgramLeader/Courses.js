@@ -251,7 +251,7 @@ export default function Courses() {
 
             <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Course Name</Text>
             <TextInput
-              placeholder="e.g., Software Engineering"
+              placeholder="e.g., Mobile Programming Device"
               placeholderTextColor={colors.text + "60"}
               value={name}
               onChangeText={setName}
@@ -260,7 +260,7 @@ export default function Courses() {
 
             <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Course Code</Text>
             <TextInput
-              placeholder="e.g., SE401"
+              placeholder="e.g., BIMPD3210"
               placeholderTextColor={colors.text + "60"}
               value={code}
               onChangeText={setCode}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, ScrollView, ActivityIndicator} from "react-native";
+import {View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, ScrollView, ActivityIndicator, KeyboardAvoidingView, Platform} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -88,86 +88,97 @@ function Rating() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
-      <View style={styles.header}>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Rate Your Lecturer</Text>
-        <Text style={[styles.headerSubtitle, { color: colors.text + "60" }]}>
-          Your feedback helps improve teaching quality
-        </Text>
-      </View>
-
-      <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-        <Text style={[styles.label, { color: colors.text + "80" }]}>Select Course</Text>
-        <View style={[styles.pickerBox, { borderColor: colors.border, backgroundColor: colors.background }]}>
-          {loading ? (
-            <ActivityIndicator size="small" color={colors.primary} style={styles.pickerLoading} />
-          ) : (
-            <Picker
-              selectedValue={selected}
-              onValueChange={setSelected}
-              dropdownIconColor={colors.text}
-              style={{ color: colors.text }}
-            >
-              <Picker.Item label="Choose a course" value={null} />
-              {lectures.map((l) => (
-                <Picker.Item
-                  key={l.id}
-                  label={`${l.courseName} - ${l.lecturerName}`}
-                  value={l}
-                />
-              ))}
-            </Picker>
-          )}
+    <KeyboardAvoidingView 
+      style={{ flex: 1 }} 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+    >
+      <ScrollView 
+        style={[styles.container, { backgroundColor: colors.background }]} 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.header}>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>Rate Your Lecturer</Text>
+          <Text style={[styles.headerSubtitle, { color: colors.text + "60" }]}>
+            Your feedback helps improve teaching quality
+          </Text>
         </View>
 
-        {selected && (
-          <View style={[styles.selectedInfo, { backgroundColor: colors.primary + "10", borderColor: colors.primary + "20" }]}>
-            <Ionicons name="information-circle-outline" size={16} color={colors.primary} />
-            <Text style={[styles.selectedText, { color: colors.text }]}>
-              {selected.courseName} with {selected.lecturerName}
-            </Text>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <Text style={[styles.label, { color: colors.text + "80" }]}>Select Course</Text>
+          <View style={[styles.pickerBox, { borderColor: colors.border, backgroundColor: colors.background }]}>
+            {loading ? (
+              <ActivityIndicator size="small" color={colors.primary} style={styles.pickerLoading} />
+            ) : (
+              <Picker
+                selectedValue={selected}
+                onValueChange={setSelected}
+                dropdownIconColor={colors.text}
+                style={{ color: colors.text }}
+              >
+                <Picker.Item label="Choose a course" value={null} />
+                {lectures.map((l) => (
+                  <Picker.Item
+                    key={l.id}
+                    label={`${l.courseName} - ${l.lecturerName}`}
+                    value={l}
+                  />
+                ))}
+              </Picker>
+            )}
           </View>
-        )}
 
-        <Text style={[styles.label, { color: colors.text + "80", marginTop: 20 }]}>Your Rating</Text>
-        {renderStars()}
-        <Text style={[styles.ratingHint, { color: colors.text + "60", textAlign: "center" }]}>
-          {getRatingText()}
-        </Text>
-
-        <Text style={[styles.label, { color: colors.text + "80", marginTop: 20 }]}>Your Comment (Optional)</Text>
-        <TextInput
-          placeholder="Share your thoughts about the course and teaching..."
-          placeholderTextColor={colors.text + "60"}
-          value={comment}
-          onChangeText={setComment}
-          style={[styles.textArea, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]}
-          multiline
-          numberOfLines={4}
-        />
-
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: rating > 0 ? colors.primary : colors.primary + "60" }]}
-          onPress={submit}
-          disabled={submitting || !selected || rating === 0}
-        >
-          {submitting ? (
-            <ActivityIndicator color="#fff" size="small" />
-          ) : (
-            <>
-              <Ionicons name="send-outline" size={20} color="#fff" />
-              <Text style={styles.buttonText}>Submit Rating</Text>
-            </>
+          {selected && (
+            <View style={[styles.selectedInfo, { backgroundColor: colors.primary + "10", borderColor: colors.primary + "20" }]}>
+              <Ionicons name="information-circle-outline" size={16} color={colors.primary} />
+              <Text style={[styles.selectedText, { color: colors.text }]}>
+                {selected.courseName} with {selected.lecturerName}
+              </Text>
+            </View>
           )}
-        </TouchableOpacity>
-      </View>
 
-      <View style={styles.footer}>
-        <Text style={[styles.footerText, { color: colors.text + "40" }]}>
-          Your feedback is anonymous and helps improve education quality
-        </Text>
-      </View>
-    </ScrollView>
+          <Text style={[styles.label, { color: colors.text + "80", marginTop: 20 }]}>Your Rating</Text>
+          {renderStars()}
+          <Text style={[styles.ratingHint, { color: colors.text + "60", textAlign: "center" }]}>
+            {getRatingText()}
+          </Text>
+
+          <Text style={[styles.label, { color: colors.text + "80", marginTop: 20 }]}>Your Comment (Optional)</Text>
+          <TextInput
+            placeholder="Share your thoughts about the course and teaching..."
+            placeholderTextColor={colors.text + "60"}
+            value={comment}
+            onChangeText={setComment}
+            style={[styles.textArea, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]}
+            multiline
+            numberOfLines={4}
+          />
+
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: rating > 0 ? colors.primary : colors.primary + "60" }]}
+            onPress={submit}
+            disabled={submitting || !selected || rating === 0}
+          >
+            {submitting ? (
+              <ActivityIndicator color="#fff" size="small" />
+            ) : (
+              <>
+                <Ionicons name="send-outline" size={20} color="#fff" />
+                <Text style={styles.buttonText}>Submit Rating</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.footer}>
+          <Text style={[styles.footerText, { color: colors.text + "40" }]}>
+            Your feedback is anonymous and helps improve education quality
+          </Text>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

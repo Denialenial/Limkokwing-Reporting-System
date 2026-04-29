@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, ScrollView, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import { View, ScrollView, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndicator, KeyboardAvoidingView, Platform } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -53,7 +53,6 @@ function Reports() {
     setStudentsPresent("");
     setStudentError("");
     
-    // Fetch live student count
     if (lecture?.programName) {
       await fetchLiveStudentCount(lecture.programName);
     }
@@ -119,205 +118,216 @@ function Reports() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
-      <View style={styles.header}>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Lecture Report</Text>
-        <Text style={[styles.headerSubtitle, { color: colors.text + "60" }]}>Submit your weekly lecture report</Text>
-      </View>
+    <KeyboardAvoidingView 
+      style={{ flex: 1 }} 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+    >
+      <ScrollView 
+        style={[styles.container, { backgroundColor: colors.background }]} 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.header}>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>Lecture Report</Text>
+          <Text style={[styles.headerSubtitle, { color: colors.text + "60" }]}>Submit your weekly lecture report</Text>
+        </View>
 
-      <Text style={[styles.label, { color: colors.text + "80" }]}>Select Course</Text>
-      <View style={[styles.pickerBox, { borderColor: colors.border, backgroundColor: colors.card }]}>
-        {loading ? (
-          <ActivityIndicator size="small" color={colors.primary} style={styles.pickerLoading} />
-        ) : (
-          <Picker
-            selectedValue={selectedLecture}
-            onValueChange={handleSelectLecture}
-            dropdownIconColor={colors.text}
-            style={{ color: colors.text }}
-          >
-            <Picker.Item label="Select a course" value={null} />
-            {lectures.map((l) => (
-              <Picker.Item
-                key={l.id}
-                label={`${l.courseName} (${l.courseCode})`}
-                value={l}
-              />
-            ))}
-          </Picker>
-        )}
-      </View>
+        <Text style={[styles.label, { color: colors.text + "80" }]}>Select Course</Text>
+        <View style={[styles.pickerBox, { borderColor: colors.border, backgroundColor: colors.card }]}>
+          {loading ? (
+            <ActivityIndicator size="small" color={colors.primary} style={styles.pickerLoading} />
+          ) : (
+            <Picker
+              selectedValue={selectedLecture}
+              onValueChange={handleSelectLecture}
+              dropdownIconColor={colors.text}
+              style={{ color: colors.text }}
+            >
+              <Picker.Item label="Select a course" value={null} />
+              {lectures.map((l) => (
+                <Picker.Item
+                  key={l.id}
+                  label={`${l.courseName} (${l.courseCode})`}
+                  value={l}
+                />
+              ))}
+            </Picker>
+          )}
+        </View>
 
-      {selectedLecture && (
-        <View style={[styles.infoCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          <View style={styles.infoHeader}>
-            <Ionicons name="book-outline" size={20} color={colors.primary} />
-            <Text style={[styles.infoTitle, { color: colors.primary }]}>{selectedLecture.courseName}</Text>
-          </View>
+        {selectedLecture && (
+          <View style={[styles.infoCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            <View style={styles.infoHeader}>
+              <Ionicons name="book-outline" size={20} color={colors.primary} />
+              <Text style={[styles.infoTitle, { color: colors.primary }]}>{selectedLecture.courseName}</Text>
+            </View>
 
-          <View style={styles.infoDivider} />
+            <View style={styles.infoDivider} />
 
-          <View style={styles.infoRow}>
-            <Text style={[styles.infoLabel, { color: colors.text + "60" }]}>Course Code</Text>
-            <Text style={[styles.infoValue, { color: colors.text }]}>{selectedLecture.courseCode}</Text>
-          </View>
+            <View style={styles.infoRow}>
+              <Text style={[styles.infoLabel, { color: colors.text + "60" }]}>Course Code</Text>
+              <Text style={[styles.infoValue, { color: colors.text }]}>{selectedLecture.courseCode}</Text>
+            </View>
 
-          <View style={styles.infoRow}>
-            <Text style={[styles.infoLabel, { color: colors.text + "60" }]}>Program</Text>
-            <Text style={[styles.infoValue, { color: colors.text }]}>{selectedLecture.programName}</Text>
-          </View>
+            <View style={styles.infoRow}>
+              <Text style={[styles.infoLabel, { color: colors.text + "60" }]}>Program</Text>
+              <Text style={[styles.infoValue, { color: colors.text }]}>{selectedLecture.programName}</Text>
+            </View>
 
-          <View style={styles.infoRow}>
-            <Text style={[styles.infoLabel, { color: colors.text + "60" }]}>Faculty</Text>
-            <Text style={[styles.infoValue, { color: colors.text }]}>{selectedLecture.facultyName}</Text>
-          </View>
+            <View style={styles.infoRow}>
+              <Text style={[styles.infoLabel, { color: colors.text + "60" }]}>Faculty</Text>
+              <Text style={[styles.infoValue, { color: colors.text }]}>{selectedLecture.facultyName}</Text>
+            </View>
 
-          <View style={styles.infoRow}>
-            <Text style={[styles.infoLabel, { color: colors.text + "60" }]}>Total Students</Text>
-            <Text style={[styles.infoValue, { color: liveTotalStudents > 0 ? "#10b981" : colors.text, fontWeight: "bold" }]}>
-              {liveTotalStudents || selectedLecture.totalStudents || 0}
-              {liveTotalStudents > 0 && liveTotalStudents !== selectedLecture?.totalStudents && (
-                <Text style={{ fontSize: 10, color: "#10b981" }}> (live)</Text>
-              )}
-            </Text>
-          </View>
-          
-          {liveTotalStudents > 0 && liveTotalStudents !== selectedLecture?.totalStudents && (
-            <View style={styles.updateHint}>
-              <Ionicons name="refresh-circle" size={14} color="#10b981" />
-              <Text style={[styles.hintText, { color: "#10b981" }]}>
-                Student count updated automatically
+            <View style={styles.infoRow}>
+              <Text style={[styles.infoLabel, { color: colors.text + "60" }]}>Total Students</Text>
+              <Text style={[styles.infoValue, { color: liveTotalStudents > 0 ? "#10b981" : colors.text, fontWeight: "bold" }]}>
+                {liveTotalStudents || selectedLecture.totalStudents || 0}
+                {liveTotalStudents > 0 && liveTotalStudents !== selectedLecture?.totalStudents && (
+                  <Text style={{ fontSize: 10, color: "#10b981" }}> (live)</Text>
+                )}
               </Text>
             </View>
-          )}
-        </View>
-      )}
-
-      {selectedLecture && (
-        <View style={styles.formSection}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Report Details</Text>
-
-          <View style={styles.rowInput}>
-            <View style={styles.halfInput}>
-              <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Week</Text>
-              <TextInput
-                placeholder="e.g., Week 1"
-                placeholderTextColor={colors.text + "60"}
-                value={week}
-                onChangeText={setWeek}
-                style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
-              />
-            </View>
-            <View style={styles.halfInput}>
-              <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Date</Text>
-              <TextInput
-                placeholder="YYYY-MM-DD"
-                placeholderTextColor={colors.text + "60"}
-                value={date}
-                onChangeText={setDate}
-                style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
-              />
-            </View>
-          </View>
-
-          <View style={styles.rowInput}>
-            <View style={styles.halfInput}>
-              <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Venue</Text>
-              <TextInput
-                placeholder="Room number"
-                placeholderTextColor={colors.text + "60"}
-                value={venue}
-                onChangeText={setVenue}
-                style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
-              />
-            </View>
-            <View style={styles.halfInput}>
-              <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Time</Text>
-              <TextInput
-                placeholder="e.g., 09:00 - 11:00"
-                placeholderTextColor={colors.text + "60"}
-                value={time}
-                onChangeText={setTime}
-                style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
-              />
-            </View>
-          </View>
-
-          <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Topic Taught</Text>
-          <TextInput
-            placeholder="Enter the topic covered"
-            placeholderTextColor={colors.text + "60"}
-            value={topic}
-            onChangeText={setTopic}
-            style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
-          />
-
-          <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Learning Outcomes</Text>
-          <TextInput
-            placeholder="What students learned"
-            placeholderTextColor={colors.text + "60"}
-            value={outcomes}
-            onChangeText={setOutcomes}
-            style={[styles.textArea, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
-            multiline
-            numberOfLines={3}
-          />
-
-          <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Recommendations</Text>
-          <TextInput
-            placeholder="Suggestions for improvement"
-            placeholderTextColor={colors.text + "60"}
-            value={recommendations}
-            onChangeText={setRecommendations}
-            style={[styles.textArea, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
-            multiline
-            numberOfLines={2}
-          />
-
-          <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Students Present</Text>
-          <TextInput
-            placeholder="Number of students present"
-            placeholderTextColor={colors.text + "60"}
-            value={studentsPresent}
-            onChangeText={(text) => {
-              setStudentsPresent(text);
-              const total = liveTotalStudents || selectedLecture?.totalStudents || 0;
-              if (Number(text) > total) {
-                setStudentError(`Cannot exceed ${total} students`);
-              } else {
-                setStudentError("");
-              }
-            }}
-            keyboardType="numeric"
-            style={[
-              styles.input,
-              { borderColor: colors.border, color: colors.text, backgroundColor: colors.card },
-              studentError && styles.inputError
-            ]}
-          />
-          {studentError && (
-            <Text style={styles.errorText}>
-              <Ionicons name="alert-circle" size={12} color="#ef4444" /> {studentError}
-            </Text>
-          )}
-
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: colors.primary }]}
-            onPress={submit}
-            disabled={submitting}
-          >
-            {submitting ? (
-              <ActivityIndicator color="#fff" size="small" />
-            ) : (
-              <>
-                <Ionicons name="send-outline" size={20} color="#fff" />
-                <Text style={styles.buttonText}>Submit Report</Text>
-              </>
+            
+            {liveTotalStudents > 0 && liveTotalStudents !== selectedLecture?.totalStudents && (
+              <View style={styles.updateHint}>
+                <Ionicons name="refresh-circle" size={14} color="#10b981" />
+                <Text style={[styles.hintText, { color: "#10b981" }]}>
+                  Student count updated automatically
+                </Text>
+              </View>
             )}
-          </TouchableOpacity>
-        </View>
-      )}
-    </ScrollView>
+          </View>
+        )}
+
+        {selectedLecture && (
+          <View style={styles.formSection}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Report Details</Text>
+
+            <View style={styles.rowInput}>
+              <View style={styles.halfInput}>
+                <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Week</Text>
+                <TextInput
+                  placeholder="e.g., Week 1"
+                  placeholderTextColor={colors.text + "60"}
+                  value={week}
+                  onChangeText={setWeek}
+                  style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
+                />
+              </View>
+              <View style={styles.halfInput}>
+                <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Date</Text>
+                <TextInput
+                  placeholder="YYYY-MM-DD"
+                  placeholderTextColor={colors.text + "60"}
+                  value={date}
+                  onChangeText={setDate}
+                  style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
+                />
+              </View>
+            </View>
+
+            <View style={styles.rowInput}>
+              <View style={styles.halfInput}>
+                <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Venue</Text>
+                <TextInput
+                  placeholder="Room number"
+                  placeholderTextColor={colors.text + "60"}
+                  value={venue}
+                  onChangeText={setVenue}
+                  style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
+                />
+              </View>
+              <View style={styles.halfInput}>
+                <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Time</Text>
+                <TextInput
+                  placeholder="e.g., 09:00 - 11:00"
+                  placeholderTextColor={colors.text + "60"}
+                  value={time}
+                  onChangeText={setTime}
+                  style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
+                />
+              </View>
+            </View>
+
+            <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Topic Taught</Text>
+            <TextInput
+              placeholder="Enter the topic covered"
+              placeholderTextColor={colors.text + "60"}
+              value={topic}
+              onChangeText={setTopic}
+              style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
+            />
+
+            <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Learning Outcomes</Text>
+            <TextInput
+              placeholder="What students learned"
+              placeholderTextColor={colors.text + "60"}
+              value={outcomes}
+              onChangeText={setOutcomes}
+              style={[styles.textArea, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
+              multiline
+              numberOfLines={3}
+            />
+
+            <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Recommendations</Text>
+            <TextInput
+              placeholder="Suggestions for improvement"
+              placeholderTextColor={colors.text + "60"}
+              value={recommendations}
+              onChangeText={setRecommendations}
+              style={[styles.textArea, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]}
+              multiline
+              numberOfLines={2}
+            />
+
+            <Text style={[styles.inputLabel, { color: colors.text + "60" }]}>Students Present</Text>
+            <TextInput
+              placeholder="Number of students present"
+              placeholderTextColor={colors.text + "60"}
+              value={studentsPresent}
+              onChangeText={(text) => {
+                setStudentsPresent(text);
+                const total = liveTotalStudents || selectedLecture?.totalStudents || 0;
+                if (Number(text) > total) {
+                  setStudentError(`Cannot exceed ${total} students`);
+                } else {
+                  setStudentError("");
+                }
+              }}
+              keyboardType="numeric"
+              style={[
+                styles.input,
+                { borderColor: colors.border, color: colors.text, backgroundColor: colors.card },
+                studentError && styles.inputError
+              ]}
+            />
+            {studentError && (
+              <Text style={styles.errorText}>
+                <Ionicons name="alert-circle" size={12} color="#ef4444" /> {studentError}
+              </Text>
+            )}
+
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: colors.primary }]}
+              onPress={submit}
+              disabled={submitting}
+            >
+              {submitting ? (
+                <ActivityIndicator color="#fff" size="small" />
+              ) : (
+                <>
+                  <Ionicons name="send-outline" size={20} color="#fff" />
+                  <Text style={styles.buttonText}>Submit Report</Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
+        )}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

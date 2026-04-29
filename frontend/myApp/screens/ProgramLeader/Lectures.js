@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert, TextInput, Modal, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert, TextInput, Modal, ScrollView, ActivityIndicator, KeyboardAvoidingView, Platform } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -196,7 +196,10 @@ export default function Lectures() {
       />
 
       <Modal visible={modalVisible} animationType="slide" transparent={true} onRequestClose={() => setModalVisible(false)}>
-        <View style={styles.modalOverlay}>
+        <KeyboardAvoidingView 
+          style={styles.modalOverlay} 
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
           <View style={[styles.modalContent, { backgroundColor: colors.card }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.text }]}>Assign New Lecture</Text>
@@ -205,7 +208,11 @@ export default function Lectures() {
               </TouchableOpacity>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView 
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{ paddingBottom: 20 }}
+            >
               <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Lecturer</Text>
               <View style={[styles.pickerWrapper, { borderColor: colors.border, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}>
                 <Picker selectedValue={selectedLecturer} onValueChange={setSelectedLecturer} dropdownIconColor={colors.text} style={{ color: colors.text }}>
@@ -263,7 +270,7 @@ export default function Lectures() {
               </View>
             </ScrollView>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -272,61 +279,188 @@ export default function Lectures() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   
-  loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
+  loadingContainer: { flex: 1, 
+    justifyContent: "center", 
+    alignItems: "center" 
+  },
 
-  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 16, paddingVertical: 12 },
+  header: { 
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    alignItems: "center", 
+    paddingHorizontal: 16, 
+    paddingVertical: 12 
+  },
   
-  title: { fontSize: 22, fontWeight: "bold" },
+  title: { 
+    fontSize: 22, 
+    fontWeight: "bold" 
+  },
   
-  assignButton: { flexDirection: "row", alignItems: "center", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, gap: 6 },
+  assignButton: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    paddingHorizontal: 14, 
+    paddingVertical: 8, 
+    borderRadius: 20, 
+    gap: 6 
+  },
   
-  assignButtonText: { color: "#fff", fontWeight: "600", fontSize: 14 },
+  assignButtonText: { 
+    color: "#fff", 
+    fontWeight: "600", 
+    fontSize: 14 
+  },
   
-  card: { marginHorizontal: 16, marginBottom: 12, padding: 14, borderRadius: 12, borderWidth: 1, elevation: 2, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2 },
+  card: { 
+    marginHorizontal: 16, 
+    marginBottom: 12, 
+    padding: 14, 
+    borderRadius: 12, 
+    borderWidth: 1, 
+    elevation: 2, 
+    shadowOffset: { width: 0, height: 1 }, 
+    shadowOpacity: 0.1, 
+    shadowRadius: 2 
+  },
  
-  cardHeader: { flexDirection: "row", alignItems: "center", marginBottom: 10, gap: 10 },
+  cardHeader: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    marginBottom: 10, 
+    gap: 10 
+  },
   
-  courseBadge: { backgroundColor: "#2563eb20", paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 },
+  courseBadge: { 
+    backgroundColor: "#2563eb20", 
+    paddingHorizontal: 8, 
+    paddingVertical: 4, 
+    borderRadius: 6 
+  },
   
-  courseCode: { color: "#2563eb", fontWeight: "bold", fontSize: 11 },
+  courseCode: { 
+    color: "#2563eb", 
+    fontWeight: "bold", 
+    fontSize: 11 
+  },
   
-  cardTitle: { fontSize: 16, fontWeight: "600", flex: 1 },
+  cardTitle: { 
+    fontSize: 16, 
+    fontWeight: "600", 
+    flex: 1 
+  },
   
-  cardDetails: { gap: 6 },
+  cardDetails: {
+    gap: 6 
+  },
   
-  detailRow: { flexDirection: "row", alignItems: "center", gap: 8 },
+  detailRow: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    gap: 8 
+  },
   
-  detailText: { fontSize: 13 },
+  detailText: { 
+    fontSize: 13 
+  },
   
-  emptyContainer: { alignItems: "center", justifyContent: "center", paddingVertical: 60 },
+  emptyContainer: { 
+    alignItems: "center", 
+    justifyContent: "center", 
+    paddingVertical: 60 
+  },
   
-  emptyText: { fontSize: 16, fontWeight: "500", marginTop: 12 },
+  emptyText: { 
+    fontSize: 16, 
+    fontWeight: "500", 
+    marginTop: 12 
+  },
   
-  emptySubtext: { fontSize: 13, marginTop: 6, textAlign: "center" },
+  emptySubtext: { 
+    fontSize: 13, 
+    marginTop: 6, 
+    textAlign: "center" 
+  },
   
-  emptyContent: { flexGrow: 1, justifyContent: "center" },
+  emptyContent: { 
+    flexGrow: 1, 
+    justifyContent: "center" 
+  },
   
-  modalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "flex-end" },
+  modalOverlay: { 
+    flex: 1, 
+    backgroundColor: "rgba(0,0,0,0.5)", 
+    justifyContent: "flex-end" 
+  },
   
-  modalContent: { borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingHorizontal: 20, paddingTop: 20, paddingBottom: 30, maxHeight: "90%" },
+  modalContent: { 
+    borderTopLeftRadius: 20, 
+    borderTopRightRadius: 20, 
+    paddingHorizontal: 20, 
+    paddingTop: 20, 
+    paddingBottom: 30, 
+    maxHeight: "90%" 
+  },
   
-  modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20 },
+  modalHeader: { 
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    alignItems: "center", 
+    marginBottom: 20 
+  },
   
-  modalTitle: { fontSize: 20, fontWeight: "bold" },
+  modalTitle: { 
+    fontSize: 20, 
+    fontWeight: "bold" 
+  },
   
-  inputLabel: { fontSize: 13, marginBottom: 6, marginTop: 12 },
+  inputLabel: { 
+    fontSize: 13, 
+    marginBottom: 6, 
+    marginTop: 12 
+  },
   
-  pickerWrapper: { borderWidth: 1, borderRadius: 10, overflow: "hidden" },
+  pickerWrapper: { 
+    borderWidth: 1, 
+    borderRadius: 10, 
+    overflow: "hidden" 
+  },
   
-  input: { borderWidth: 1, borderRadius: 10, paddingHorizontal: 14, paddingVertical: 10, fontSize: 15 },
+  input: {
+     borderWidth: 1, 
+     borderRadius: 10, 
+     paddingHorizontal: 14, 
+     paddingVertical: 10, 
+     fontSize: 15 
+    },
   
-  modalButtons: { flexDirection: "row", gap: 12, marginTop: 24, marginBottom: 10 },
+  modalButtons: { 
+    flexDirection: "row", 
+    gap: 12, 
+    marginTop: 24, 
+    marginBottom: 10 
+  },
   
-  cancelButton: { flex: 1, paddingVertical: 12, borderRadius: 10, borderWidth: 1, alignItems: "center" },
+  cancelButton: { 
+    flex: 1, 
+    paddingVertical: 12, 
+    borderRadius: 10, 
+    borderWidth: 1, 
+    alignItems: "center" 
+  },
   
-  cancelButtonText: { fontWeight: "600" },
+  cancelButtonText: { 
+    fontWeight: "600" 
+  },
  
-  submitButton: { flex: 1, paddingVertical: 12, borderRadius: 10, alignItems: "center" },
+  submitButton: { 
+    flex: 1, 
+    paddingVertical: 12, 
+    borderRadius: 10, 
+    alignItems: "center" 
+  },
   
-  submitButtonText: { color: "#fff", fontWeight: "bold" },
+  submitButtonText: { 
+    color: "#fff", 
+    fontWeight: "bold" },
 });
