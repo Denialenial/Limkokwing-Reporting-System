@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert, Modal, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert, Modal, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -131,7 +131,7 @@ export default function Courses() {
     if (isCourseAssigned(selectedCourse.id)) {
       Alert.alert(
         "Cannot Delete",
-        "This course is currently assigned to a lecturer."
+        "This course is currently assigned to a lecturer. you cannot delete it."
       );
       return;
     }
@@ -239,8 +239,12 @@ export default function Courses() {
         showsVerticalScrollIndicator={false}
       />
 
+      {/* Add Course Modal with KeyboardAvoidingView */}
       <Modal visible={modalVisible} animationType="slide" transparent={true} onRequestClose={() => setModalVisible(false)}>
-        <View style={styles.modalOverlay}>
+        <KeyboardAvoidingView 
+          style={styles.modalOverlay} 
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
           <View style={[styles.modalContent, { backgroundColor: colors.card }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.text }]}>Add New Course</Text>
@@ -249,48 +253,58 @@ export default function Courses() {
               </TouchableOpacity>
             </View>
 
-            <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Course Name</Text>
-            <TextInput
-              placeholder="e.g., Mobile Programming Device"
-              placeholderTextColor={colors.text + "60"}
-              value={name}
-              onChangeText={setName}
-              style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}
-            />
+            <ScrollView 
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{ paddingBottom: 20 }}
+            >
+              <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Course Name</Text>
+              <TextInput
+                placeholder="e.g., Software Engineering"
+                placeholderTextColor={colors.text + "60"}
+                value={name}
+                onChangeText={setName}
+                style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}
+              />
 
-            <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Course Code</Text>
-            <TextInput
-              placeholder="e.g., BIMPD3210"
-              placeholderTextColor={colors.text + "60"}
-              value={code}
-              onChangeText={setCode}
-              style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}
-            />
+              <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Course Code</Text>
+              <TextInput
+                placeholder="e.g., SE401"
+                placeholderTextColor={colors.text + "60"}
+                value={code}
+                onChangeText={setCode}
+                style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}
+              />
 
-            <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Program</Text>
-            <View style={[styles.pickerWrapper, { borderColor: colors.border, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}>
-              <Picker selectedValue={program} onValueChange={setProgram} dropdownIconColor={colors.text} style={{ color: colors.text }}>
-                <Picker.Item label="Select Program" value="" />
-                {programs.map((p) => (
-                  <Picker.Item key={p.id} label={p.name} value={p.name} />
-                ))}
-              </Picker>
-            </View>
+              <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Program</Text>
+              <View style={[styles.pickerWrapper, { borderColor: colors.border, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}>
+                <Picker selectedValue={program} onValueChange={setProgram} dropdownIconColor={colors.text} style={{ color: colors.text }}>
+                  <Picker.Item label="Select Program" value="" />
+                  {programs.map((p) => (
+                    <Picker.Item key={p.id} label={p.name} value={p.name} />
+                  ))}
+                </Picker>
+              </View>
 
-            <View style={styles.modalButtons}>
-              <TouchableOpacity style={[styles.cancelButton, { borderColor: colors.border }]} onPress={() => setModalVisible(false)}>
-                <Text style={[styles.cancelButtonText, { color: colors.text }]}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.submitButton, { backgroundColor: colors.primary }]} onPress={handleAddCourse} disabled={loading}>
-                <Text style={styles.submitButtonText}>{loading ? "Adding..." : "Add Course"}</Text>
-              </TouchableOpacity>
-            </View>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity style={[styles.cancelButton, { borderColor: colors.border }]} onPress={() => setModalVisible(false)}>
+                  <Text style={[styles.cancelButtonText, { color: colors.text }]}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.submitButton, { backgroundColor: colors.primary }]} onPress={handleAddCourse} disabled={loading}>
+                  <Text style={styles.submitButtonText}>{loading ? "Adding..." : "Add Course"}</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
 
+      {/* Edit Course Modal with KeyboardAvoidingView */}
       <Modal visible={editModalVisible} animationType="slide" transparent={true} onRequestClose={() => setEditModalVisible(false)}>
-        <View style={styles.modalOverlay}>
+        <KeyboardAvoidingView 
+          style={styles.modalOverlay} 
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
           <View style={[styles.modalContent, { backgroundColor: colors.card }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.text }]}>Edit Course</Text>
@@ -299,47 +313,53 @@ export default function Courses() {
               </TouchableOpacity>
             </View>
 
-            <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Course Name</Text>
-            <TextInput
-              placeholderTextColor={colors.text + "60"}
-              value={name}
-              onChangeText={setName}
-              style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}
-            />
+            <ScrollView 
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{ paddingBottom: 20 }}
+            >
+              <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Course Name</Text>
+              <TextInput
+                placeholderTextColor={colors.text + "60"}
+                value={name}
+                onChangeText={setName}
+                style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}
+              />
 
-            <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Course Code</Text>
-            <TextInput
-              placeholderTextColor={colors.text + "60"}
-              value={code}
-              onChangeText={setCode}
-              style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}
-            />
+              <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Course Code</Text>
+              <TextInput
+                placeholderTextColor={colors.text + "60"}
+                value={code}
+                onChangeText={setCode}
+                style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}
+              />
 
-            <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Program</Text>
-            <View style={[styles.pickerWrapper, { borderColor: colors.border, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}>
-              <Picker selectedValue={program} onValueChange={setProgram} dropdownIconColor={colors.text} style={{ color: colors.text }}>
-                <Picker.Item label="Select Program" value="" />
-                {programs.map((p) => (
-                  <Picker.Item key={p.id} label={p.name} value={p.name} />
-                ))}
-              </Picker>
-            </View>
+              <Text style={[styles.inputLabel, { color: colors.text + "CC" }]}>Program</Text>
+              <View style={[styles.pickerWrapper, { borderColor: colors.border, backgroundColor: dark ? "#1c1c1e" : "#f5f5f5" }]}>
+                <Picker selectedValue={program} onValueChange={setProgram} dropdownIconColor={colors.text} style={{ color: colors.text }}>
+                  <Picker.Item label="Select Program" value="" />
+                  {programs.map((p) => (
+                    <Picker.Item key={p.id} label={p.name} value={p.name} />
+                  ))}
+                </Picker>
+              </View>
 
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={[styles.deleteButton, { borderColor: "#ef4444" }]}
-                onPress={handleDeleteCourse}
-                disabled={loading}
-              >
-                <Ionicons name="trash-outline" size={18} color="#ef4444" />
-                <Text style={[styles.deleteButtonText, { color: "#ef4444" }]}>Delete</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.submitButton, { backgroundColor: colors.primary }]} onPress={handleEditCourse} disabled={loading}>
-                <Text style={styles.submitButtonText}>{loading ? "Saving..." : "Save Changes"}</Text>
-              </TouchableOpacity>
-            </View>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={[styles.deleteButton, { borderColor: "#ef4444" }]}
+                  onPress={handleDeleteCourse}
+                  disabled={loading}
+                >
+                  <Ionicons name="trash-outline" size={18} color="#ef4444" />
+                  <Text style={[styles.deleteButtonText, { color: "#ef4444" }]}>Delete</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.submitButton, { backgroundColor: colors.primary }]} onPress={handleEditCourse} disabled={loading}>
+                  <Text style={styles.submitButtonText}>{loading ? "Saving..." : "Save Changes"}</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
