@@ -215,7 +215,7 @@ function Register({ navigation }) {
                 style={[styles.passwordInput, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]}
                 placeholder="Password"
                 placeholderTextColor={colors.text + "60"}
-                secureTextEntry={!showPassword}
+                //secureTextEntry={!showPassword}
                 value={password}
                 onChangeText={setPassword}
               />
@@ -229,7 +229,7 @@ function Register({ navigation }) {
                 style={[styles.passwordInput, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]}
                 placeholder="Confirm Password"
                 placeholderTextColor={colors.text + "60"}
-                secureTextEntry={!showConfirmPassword}
+                //secureTextEntry={!showConfirmPassword}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
               />

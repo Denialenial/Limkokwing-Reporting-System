@@ -77,7 +77,7 @@ function Login({ navigation }) {
                 style={[styles.passwordInput, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]}
                 value={password}
                 onChangeText={setPassword}
-                secureTextEntry={!showPassword}
+                //secureTextEntry={!showPassword}
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
                 <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color={colors.text + "60"} />
